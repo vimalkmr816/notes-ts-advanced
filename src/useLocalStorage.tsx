@@ -1,27 +1,22 @@
 import { useEffect, useState } from "react"
 
-type ReturnType<T> = [T | undefined, React.Dispatch<React.SetStateAction<T | undefined>>]
-
-export const useLocalStorage = <T,>(key: string, initialValue?: T): ReturnType<T> => {
-	const [state, setState] = useState<T | undefined>(() => {
-		if (!initialValue) return
-		try {
-			const value = localStorage.getItem(key)
-			return value ? JSON.parse(value) : initialValue
-		} catch (err) {
-			return initialValue
+export function useLocalStorage<T>(key: string, initialValue: T | (() => T)) {
+	const [value, setValue] = useState<T>(() => {
+		const jsonValue = localStorage.getItem(key)
+		if (jsonValue == null) {
+			if (typeof initialValue === "function") {
+				return (initialValue as () => T)()
+			} else {
+				return initialValue
+			}
+		} else {
+			return JSON.parse(jsonValue)
 		}
 	})
 
 	useEffect(() => {
-		if (state) {
-			try {
-				localStorage.setItem(key, JSON.stringify(state))
-			} catch (err) {
-				console.log(err)
-			}
-		}
-	}, [state, key])
+		localStorage.setItem(key, JSON.stringify(value))
+	}, [value, key])
 
-	return [state, setState]
+	return [value, setValue] as [T, typeof setValue]
 }

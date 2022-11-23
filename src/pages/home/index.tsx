@@ -11,16 +11,8 @@ const Home = ({ notes }: HomeProps) => {
 	return (
 		<div>
 			<h1>Notes</h1>
-			<input type="text" />
-			<select id="">
-				{tags.map(tag => (
-					<option key={tag} value={tag}>
-						{tag}
-					</option>
-				))}
-			</select>
 			<div>
-				{notes.map(note => (
+				{notes?.map(note => (
 					<NoteCard key={note.id} note={note} />
 				))}
 			</div>

@@ -1,14 +1,13 @@
 import React from "react"
 import NoteForm from "../../components/noteForm"
-import { NoteT } from "../../interfaces"
+import { NoteData } from "../../interfaces"
 interface NewNoteProps {
-	notes: NoteT[] | null
-	setNotes: React.Dispatch<React.SetStateAction<NoteT[] | null>>
+	onSubmit: (data: NoteData) => void
 }
-const NewNote = ({ notes, setNotes }: NewNoteProps) => {
+const NewNote = ({ onSubmit }: NewNoteProps) => {
 	return (
 		<div>
-			<NoteForm notes={notes} setNotes={setNotes}></NoteForm>
+			<NoteForm onSubmit={onSubmit} />
 		</div>
 	)
 }
