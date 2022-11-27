@@ -2,11 +2,13 @@ import React, { FormEvent, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import CreatableReactSelect from "react-select/creatable"
 import styled from "styled-components"
-import { uuid } from "uuidv4"
+import { v4 as uuidV4 } from "uuid"
 import { NoteData, Tag } from "../../interfaces"
 import { useLocalStorage } from "../../useLocalStorage"
 interface NoteFormProps {
 	onSubmit: (data: NoteData) => void
+	onAddTag: (tag: Tag) => void
+	availableTags: Tag[]
 }
 const TitleInput = styled.input`
 	width: 100%;
@@ -23,10 +25,10 @@ const StyledCreatableReactSelect = styled(CreatableReactSelect)`
 	margin: 1rem;
 	width: 100%;
 `
-const NoteForm = ({ onSubmit }: NoteFormProps) => {
+const NoteForm = ({ onSubmit, onAddTag, availableTags }: NoteFormProps) => {
 	const titleRef = useRef<HTMLInputElement>(null)
 	const markdownRef = useRef<HTMLTextAreaElement>(null)
-	const [selectedTags, setSelectedTags] = useState<Tag[]>([])
+	const [selectedTags, setSelectedTags] = useState<Tag[]>(availableTags)
 
 	const navigate = useNavigate()
 	const handleSubmit = (e: FormEvent) => {
@@ -34,8 +36,9 @@ const NoteForm = ({ onSubmit }: NoteFormProps) => {
 		onSubmit({
 			title: titleRef?.current!.value,
 			markdown: markdownRef?.current!.value,
-			tags: [],
+			tags: selectedTags,
 		})
+		navigate("..")
 	}
 	return (
 		<div>
@@ -44,12 +47,15 @@ const NoteForm = ({ onSubmit }: NoteFormProps) => {
 				<TitleInput ref={titleRef} required type="text" />
 				<StyledCreatableReactSelect
 					onCreateOption={label => {
-						const newTag = { id: uuid(), label }
+						const newTag = { id: uuidV4(), label: label }
 						onAddTag(newTag)
 						setSelectedTags(prev => [...prev, newTag])
 					}}
 					value={selectedTags.map(tag => {
 						return { label: tag.label, value: tag.id }
+					})}
+					options={availableTags.map(tags => {
+						return { label: tags.label, value: tags.id }
 					})}
 					onChange={tags => {
 						setSelectedTags(
@@ -62,9 +68,9 @@ const NoteForm = ({ onSubmit }: NoteFormProps) => {
 				/>
 				<label>Text</label>
 				<TextInput ref={markdownRef} required rows={15} />
+				<button type="submit">Save</button>
+				<button onClick={() => navigate("/")}>Cancel</button>
 			</form>
-			<button>Save</button>
-			<button onClick={() => navigate("/")}>Cancel</button>
 		</div>
 	)
 }

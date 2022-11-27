@@ -1,13 +1,14 @@
-import React from "react"
 import NoteForm from "../../components/noteForm"
-import { NoteData } from "../../interfaces"
+import { NoteData, Tag } from "../../interfaces"
 interface NewNoteProps {
 	onSubmit: (data: NoteData) => void
+	onAddTag: (tag: Tag) => void
+	availableTags: Tag[]
 }
-const NewNote = ({ onSubmit }: NewNoteProps) => {
+const NewNote = ({ onSubmit, onAddTag, availableTags }: NewNoteProps) => {
 	return (
 		<div>
-			<NoteForm onSubmit={onSubmit} />
+			<NoteForm onSubmit={onSubmit} onAddTag={onAddTag} availableTags={availableTags} />
 		</div>
 	)
 }
