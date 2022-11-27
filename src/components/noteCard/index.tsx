@@ -1,21 +1,19 @@
-import React from "react"
-import { Note, RawNote } from "../../interfaces"
+import { Link } from "react-router-dom"
+import { NoteCardProps } from "../../interfaces"
+import { NoteCardTitle, NoteCardWrapper, Tags, TagWrapper } from "./styles"
 
-interface NoteCardProps {
-	note: RawNote
-}
 const NoteCard = ({ note }: NoteCardProps) => {
 	return (
-		<div>
-			<div>
-				{note.tagIds.map(tag => (
-					<span>{tag}</span>
-				))}
-			</div>
-			<span>{note.title}</span>
-			<span>{note.markdown}</span>
-			<div></div>
-		</div>
+		<Link to={note.id} style={{ color: "inherit" }}>
+			<NoteCardWrapper>
+				<NoteCardTitle>{note.title}</NoteCardTitle>
+				<TagWrapper>
+					{note?.tags?.map(tag => {
+						return <Tags key={tag.id}>{tag.label}</Tags>
+					})}
+				</TagWrapper>
+			</NoteCardWrapper>
+		</Link>
 	)
 }
 

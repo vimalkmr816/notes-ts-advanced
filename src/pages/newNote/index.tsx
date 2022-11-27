@@ -1,10 +1,6 @@
 import NoteForm from "../../components/noteForm"
-import { NoteData, Tag } from "../../interfaces"
-interface NewNoteProps {
-	onSubmit: (data: NoteData) => void
-	onAddTag: (tag: Tag) => void
-	availableTags: Tag[]
-}
+import { NewNoteProps } from "../../interfaces"
+
 const NewNote = ({ onSubmit, onAddTag, availableTags }: NewNoteProps) => {
 	return (
 		<div>

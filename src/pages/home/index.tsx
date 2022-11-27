@@ -1,16 +1,21 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import Select from "react-select"
+import styled from "styled-components"
 import NoteCard from "../../components/noteCard"
-import { Note, RawNote, Tag } from "../../interfaces"
-interface HomeProps {
-	notes: RawNote[]
-	availableTags: Tag[]
-}
+import { HomeProps, Note, RawNote, Tag } from "../../interfaces"
+import { NoteCardWrapper } from "./styles"
+
 const Home = ({ notes, availableTags }: HomeProps) => {
 	const navigate = useNavigate()
 	const [title, setTitle] = useState("")
 	const [selectedTags, setSelectedTags] = useState<Tag[]>([])
+
+	const filteredNotes = useMemo(() => {
+		return notes.filter(note => {
+			return (title === "" || note.title.toLowerCase().includes(title.toLowerCase())) && (selectedTags.length === 0 || selectedTags.every(tag => note.tags.some(noteTag => noteTag.id === tag.id)))
+		})
+	}, [title, selectedTags, notes])
 
 	return (
 		<div>
@@ -37,11 +42,11 @@ const Home = ({ notes, availableTags }: HomeProps) => {
 					}}
 				></Select>
 			</form>
-			<div>
-				{notes?.map(note => (
-					<NoteCard key={note.id} note={note} />
-				))}
-			</div>
+			<NoteCardWrapper>
+				{filteredNotes.map(note => {
+					return <NoteCard key={note.id} note={note} />
+				})}
+			</NoteCardWrapper>
 		</div>
 	)
 }

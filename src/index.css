@@ -4,7 +4,9 @@
   line-height: 24px;
   font-weight: 400;
 }
-
+*{
+  outline:1px dotted limegreen
+}
 a {
   font-weight: 500;
   color: #646cff;
@@ -17,6 +19,7 @@ a:hover {
 
 body {
   margin: 0;
+	background-color: antiquewhite;
   display: flex;
   min-height: 100vh;
 }
